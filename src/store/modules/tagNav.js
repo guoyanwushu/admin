@@ -36,6 +36,7 @@ const mutations = {
 const actions = {
   addVisitedView: ({ commit }, view) => {
     commit('ADD_VISITED_VIWE', view)
+
   }
 }
 export default {
