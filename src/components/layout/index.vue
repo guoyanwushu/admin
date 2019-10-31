@@ -2,7 +2,9 @@
   <div class="layout-container">
     <header class="layout-head"></header>
     <div class="layout-content">
-      <div class="panel-left"></div>
+      <div class="panel-left">
+        <main-nav :menusData="menus"></main-nav>
+      </div>
       <div class="panel-right">
         <tag-nav></tag-nav>
         <router-view></router-view>
@@ -11,12 +13,26 @@
   </div>
 </template>
 <script>
+import MainNav from '../menu'
 import TagNav from '../TagNav'
+import inst from '../../apis/index'
 export default {
   name: 'layout',
   components: {
-    TagNav
-  }
+    TagNav,
+    MainNav
+  },
+  data () {
+    return {
+      menus: []
+    }
+  },
+  mounted () {
+    inst.get('/permissions').then(res => {
+      console.log(res);
+      this.menus = res
+    })
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -36,6 +52,7 @@ export default {
     .panel-left {
       width: 240px;
       height: 100%;
+      overflow-y: auto;
       float: left;
     }
     .panel-right {
