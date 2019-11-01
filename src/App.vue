@@ -1,7 +1,10 @@
 <template>
-  <layout></layout>
+  <layout>
+
+  </layout>
 </template>
 <script>
+import './router/asyncRouter'
 import Layout from './components/layout/index'
 export default {
   components: {

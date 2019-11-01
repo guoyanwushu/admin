@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "content": [{
+    "id": 1,
+    "name": "首页",
+    "path": "/home",
+    "componentPath": "Home/index.vue",
+    "meta": {
+      "noCache": false
+    }
+  }, {
+    "id": 2,
+    "name": "关于",
+    "path": "/about",
+    "componentPath": "About.vue",
+    "meta": {
+      "noCache": false
+    }
+  }]
+}

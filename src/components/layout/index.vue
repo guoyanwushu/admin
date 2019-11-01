@@ -1,30 +1,43 @@
 <template>
   <div class="layout-container">
-    <header class="layout-head"></header>
+    <header class="layout-head">
+      <v-header></v-header>
+    </header>
     <div class="layout-content">
       <div class="panel-left">
         <main-nav :menusData="menus"></main-nav>
       </div>
       <div class="panel-right">
         <tag-nav></tag-nav>
-        <router-view></router-view>
+        <div class="router-view-wrapper">
+          <keep-alive>
+            <router-view />
+          </keep-alive>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import VHeader from '../Header/index'
 import MainNav from '../menu'
-import TagNav from '../TagNav'
+import TagNav from '../TagNav/TagNav'
 import inst from '../../apis/index'
 export default {
   name: 'layout',
   components: {
     TagNav,
-    MainNav
+    MainNav,
+    VHeader
   },
   data () {
     return {
       menus: []
+    }
+  },
+  computed: {
+    cachedViews () {
+      return this.$store.state.tagView
     }
   },
   mounted () {
@@ -60,5 +73,10 @@ export default {
       height: 100%;
       float: left;
     }
+  }
+  .router-view-wrapper {
+    width: 100%;
+    height: calc(100% - 40px);
+
   }
 </style>
