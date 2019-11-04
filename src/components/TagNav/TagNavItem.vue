@@ -6,7 +6,7 @@
     <router-link
       tag="span"
       :to="{path: tag.path}"
-    >{{tag.name}}<i class="close" v-show="!tag.fix && showClose" @click="closeTag">X</i></router-link>
+    >{{tag.title}}<i class="close" v-show="!tag.fix && showClose" @click="closeTag">X</i></router-link>
   </div>
 </template>
 <script>

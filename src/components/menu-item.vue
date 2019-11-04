@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-submenu v-if="menuItem.children && menuItem.children.length>0" :index="menuItem.id">
-      <span slot="title">{{menuItem.name}}</span>
+      <span slot="title">{{menuItem.title}}</span>
       <menu-item v-for="item in menuItem.children" :menuItem="item"></menu-item>
     </el-submenu>
     <el-menu-item v-else :index="menuItem.id" @click="chooseMenuItem">
-      <span slot="title">{{menuItem.name}}</span>
+      <span slot="title">{{menuItem.title}}</span>
     </el-menu-item>
   </div>
 </template>
@@ -17,7 +17,7 @@
     },
     methods: {
       chooseMenuItem () {
-        this.$store.dispatch('tagView/addVisitedView', {title: this.menuItem.name, path: this.menuItem.path, name: this.menuItem.name, meta: this.menuItem.meta});
+        this.$store.dispatch('tagView/addVisitedView', {title: this.menuItem.title, path: this.menuItem.path, name: this.menuItem.name, meta: this.menuItem.meta});
         this.$router.push(this.menuItem.path);
       }
     }

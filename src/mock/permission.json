@@ -2,16 +2,18 @@
   "success": true,
   "content": [{
     "id": 1,
-    "name": "首页",
+    "title": "首页",
     "path": "/home",
+    "name": "home",
     "componentPath": "Home/index.vue",
     "meta": {
       "noCache": false
     }
   }, {
     "id": 2,
-    "name": "关于",
+    "title": "关于",
     "path": "/about",
+    "name": "about",
     "componentPath": "About.vue",
     "meta": {
       "noCache": false

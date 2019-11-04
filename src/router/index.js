@@ -11,6 +11,11 @@ const routes = [
     component: Home
   },
   {
+    path: '/redirect',
+    name: 'redirect',
+    component: () => import('../components/RedirectPath.vue')
+  },
+  {
     path: '/about1',
     name: 'about',
     // route level code-splitting

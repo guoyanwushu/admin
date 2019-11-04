@@ -1,5 +1,5 @@
 <template>
-  <el-menu>
+  <el-menu default-active="1">
     <menu-item v-for="item in menusData" :menuItem="item"></menu-item>
   </el-menu>
 </template>
@@ -22,11 +22,14 @@ export default {
     addRoute(routes, menus) {
       menus.map(menu => {
         routes.push({
+          id: menu.id,
           name: menu.name,
+          title: menu.title,
           path: menu.path,
           component: () => import(`views/${menu.componentPath}`),
           meta: menu.meta
         })
+        this.$store.dispatch('tagView/addCachedView', {name: menu.name, meta: menu.meta})
         if (menu.children) addRoute(routes, menu.children)
       })
     }

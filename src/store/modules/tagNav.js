@@ -1,8 +1,7 @@
 // mutation 只能同步 action可以异步。 所以就只在mutation里执行一些state的增删改查同步修改，然后在action里用promise包装。在业务逻辑中就可以
 // 使用 this.$store.dispatch('action').then() 来进行后续的逻辑
 const state = {
-  visitedViews: [{title: '关于', path: '/about', name: 'about', meta: {noCache: false}},
-    {title: '首页', path: '/', name: 'home', meta: {noCache: false}}],
+  visitedViews: [],
   cachedViews: [] // 允许keep-alive保持状态的路由,难道还有不保持状态的视图?
 }
 const mutations = {
@@ -39,8 +38,14 @@ const actions = {
     commit('ADD_VISITED_VIEW', view)
     commit('ADD_CACHED_VIEW', view)
   },
+  addCachedView: ({commit}, view) => {
+    commit('ADD_CACHED_VIEW', view)
+  },
   delVisitedView: ({commit}, view) => {
     commit('DEL_VISITED_VIEW', view)
+    commit('DEL_CACHED_VIEW', view)
+  },
+  delCachedView: ({commit}, view) => {
     commit('DEL_CACHED_VIEW', view)
   }
 }

@@ -10,7 +10,7 @@
       <div class="panel-right">
         <tag-nav></tag-nav>
         <div class="router-view-wrapper">
-          <keep-alive>
+          <keep-alive :include="cachedViews">
             <router-view />
           </keep-alive>
         </div>
@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     cachedViews () {
-      return this.$store.state.tagView
+      return this.$store.state.tagView.cachedViews
     }
   },
   mounted () {
