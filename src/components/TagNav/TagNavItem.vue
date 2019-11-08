@@ -6,7 +6,7 @@
     <router-link
       tag="span"
       :to="{path: tag.path}"
-    >{{tag.title}}<i class="close" v-show="!tag.fix && showClose" @click="closeTag">X</i></router-link>
+    >{{tag.title}}<i class="close" v-show="!tag.meta.fix && showClose" @click.stop="closeTag(tag)">X</i></router-link>
   </div>
 </template>
 <script>
@@ -20,8 +20,17 @@ export default {
     tag: Object
   },
   methods: {
-    closeTag () {
-      this.$store.dispatch('tagView/delVisitedView', this.tag)
+    closeTag (tag) {
+      this.$store.dispatch('tagView/delVisitedView', tag).then(visitedViews => {
+        this.toLastView(visitedViews, tag)
+      })
+    },
+    toLastView (visitedViews, view) {
+      if (view.path !== this.$route.path) return
+      var lastView = visitedViews.slice(-1)[0]
+      if (lastView) {
+        this.$router.push(lastView.path)
+      }
     }
   }
 }
@@ -37,7 +46,7 @@ export default {
       line-height: 40px;
       text-align: center;
       box-sizing: border-box;
-      padding: 0 20px;
+      padding: 0 30px;
       font-size: 14px;
       color: #404040;
       border-bottom: 2px solid transparent;

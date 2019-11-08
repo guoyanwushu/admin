@@ -41,8 +41,13 @@ const actions = {
   addCachedView: ({commit}, view) => {
     commit('ADD_CACHED_VIEW', view)
   },
-  delVisitedView: ({commit}, view) => {
-    commit('DEL_VISITED_VIEW', view)
+  delVisitedView: ({commit, state}, view) => {
+    return new Promise(resolve => {
+      commit('DEL_VISITED_VIEW', view);
+      commit('DEL_CACHED_VIEW', view);
+      resolve([...state.visitedViews])
+    })
+
     commit('DEL_CACHED_VIEW', view)
   },
   delCachedView: ({commit}, view) => {

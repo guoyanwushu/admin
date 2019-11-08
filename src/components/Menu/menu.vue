@@ -5,7 +5,7 @@
 </template>
 <script>
 import MenuItem from './menu-item'
-import inst from '../apis/index'
+import inst from '../../apis/index'
 export default {
   data () {
     return {
@@ -16,9 +16,6 @@ export default {
     MenuItem
   },
   methods: {
-    handleClickMenu (menu) {
-      this.$router.push({path: menu.page})
-    },
     addRoute(routes, menus) {
       menus.map(menu => {
         routes.push({
@@ -29,6 +26,9 @@ export default {
           component: () => import(`views/${menu.componentPath}`),
           meta: menu.meta
         })
+        if (menu.meta.fix) {
+          this.$store.dispatch('tagView/addVisitedView', {title: menu.title, name: menu.name, path: menu.path, meta: menu.meta})
+        }
         this.$store.dispatch('tagView/addCachedView', {name: menu.name, meta: menu.meta})
         if (menu.children) addRoute(routes, menu.children)
       })
@@ -40,9 +40,8 @@ export default {
       if (res && res.length) {
         this.addRoute(asyncRoutes, res);
         this.menusData = asyncRoutes
-        console.log(asyncRoutes);
         this.$router.addRoutes(asyncRoutes);
-        console.log(this.$router)
+        this.$router.push(this.$store.state.tagView.visitedViews[0].path)
       }
     })
   }

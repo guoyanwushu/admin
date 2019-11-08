@@ -20,7 +20,7 @@
 </template>
 <script>
 import VHeader from '../Header/index'
-import MainNav from '../menu'
+import MainNav from '../Menu/menu'
 import TagNav from '../TagNav/TagNav'
 import inst from '../../apis/index'
 export default {

@@ -10,6 +10,7 @@
   </div>
 </template>
 <script>
+  /* 从后端请求回来的菜单数据，要同时构建菜单和路由 */
   export  default {
     name: 'MenuItem',
     props: {

@@ -14,7 +14,7 @@
       @mouseleave="showTextMenu=false"
     >
       <li @click="refreshTag()">refresh</li>
-      <li @click="closeNowTag()">close now</li>
+      <li @click="closeNowTag()" v-if="!isFixTag(selectTag)">close now</li>
       <li @click="closeOtherTag()">cloae others</li>
       <li @click="closeAllTag()">close all</li>
     </ul>
@@ -44,8 +44,10 @@
       }
     },
     methods: {
+      isFixTag(view) {
+        return view.meta && view.meta.fix
+      },
       openMenu(tag, event) {
-        this.showTextMenu = true
         const minMenuWidth = 150
         const offsetLeft = this.$el.getBoundingClientRect().left
         const offsetWidth = this.$el.offsetWidth
@@ -58,6 +60,15 @@
         }
         this.top = 40
         this.selectTag = tag
+        this.showTextMenu = true
+      },
+      toLastView(visitedViews, view) {
+        // 返回上一个打开的路由
+        if (view.path !== this.$route.path) return
+        var lastView = visitedViews.slice(-1)[0]
+        if (lastView) {
+          this.$router.push(lastView.path)
+        }
       },
       refreshTag() {
         this.$store.dispatch('tagView/delCachedView', this.selectTag)
@@ -70,6 +81,12 @@
           })
         })
         this.showTextMenu = false
+      },
+      closeNowTag () {
+        this.showTextMenu = false
+        this.$store.dispatch('tagView/delVisitedView', this.selectTag).then(visitedViews => {
+          this.toLastView(visitedViews, this.selectTag);
+        })
       }
     },
     components: {
