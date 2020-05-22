@@ -3,7 +3,7 @@
  */
 import {Message} from 'element-ui'
 import axios from 'axios'
-const DEVELOP_BASEURL = 'http://yapi.demo.qunar.com/mock/22358/admin/'
+const DEVELOP_BASEURL = 'http://www.juwenyd.com/mock/41/'
 const inst = axios.create({
   baseURL: process.env.NODE_ENV === 'development'?DEVELOP_BASEURL:'',     // baseURL需要根据环境来定
 })

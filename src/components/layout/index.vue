@@ -5,7 +5,7 @@
     </header>
     <div class="layout-content">
       <div class="panel-left">
-        <main-nav :menusData="menus"></main-nav>
+        <main-nav :menuData="menus" label-key="text" value-key="id"></main-nav>
       </div>
       <div class="panel-right">
         <tag-nav></tag-nav>
@@ -20,8 +20,9 @@
 </template>
 <script>
 import VHeader from '../Header/index'
-import MainNav from '../Menu/menu'
+import MainNav from '../Menu/TestMenu.vue'
 import TagNav from '../TagNav/TagNav'
+import menus from '../../mock/permission'
 import inst from '../../apis/index'
 export default {
   name: 'layout',
@@ -41,11 +42,8 @@ export default {
     }
   },
   mounted () {
-    inst.get('/permissions').then(res => {
-      console.log(res);
-      this.menus = res
-    })
-  },
+    this.menus = menus
+  }
 }
 </script>
 <style lang="scss" scoped>

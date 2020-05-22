@@ -30,12 +30,12 @@ export default {
           this.$store.dispatch('tagView/addVisitedView', {title: menu.title, name: menu.name, path: menu.path, meta: menu.meta})
         }
         this.$store.dispatch('tagView/addCachedView', {name: menu.name, meta: menu.meta})
-        if (menu.children) addRoute(routes, menu.children)
+        if (menu.children) this.addRoute(routes, menu.children)
       })
     }
   },
   mounted () {
-    inst.get('/permission').then(res=> {
+    inst.get('/menus').then(res=> {
       var asyncRoutes = []
       if (res && res.length) {
         this.addRoute(asyncRoutes, res);
