@@ -5,10 +5,16 @@
     </header>
     <div class="layout-content">
       <div class="panel-left">
-        <main-nav :menuData="menus" label-key="text" value-key="id"></main-nav>
+        <main-nav :menus-data="menus" @choosemenu="handleMenuChoose" :text-key="'text'" :index-key="'id'">
+        </main-nav>
       </div>
       <div class="panel-right">
-        <tag-nav></tag-nav>
+        <tag-nav
+          :tags="tags"
+          ref="tagView"
+          tag-value-field="id"
+          tag-text-field="text"
+          ></tag-nav>
         <div class="router-view-wrapper">
           <keep-alive :include="cachedViews">
             <router-view />
@@ -20,8 +26,8 @@
 </template>
 <script>
 import VHeader from '../Header/index'
-import MainNav from '../Menu/TestMenu.vue'
-import TagNav from '../TagNav/TagNav'
+import MainNav from '../Menu/menu.vue'
+import TagNav from '../../framework/TagView/TagView'
 import menus from '../../mock/permission'
 import inst from '../../apis/index'
 export default {
@@ -33,7 +39,14 @@ export default {
   },
   data () {
     return {
-      menus: []
+      menus: menus,
+      tags: [{
+        id: 1,
+        text: '通知公告'
+      }, {
+        id: 2,
+        text: '党风廉政建设'
+      }]
     }
   },
   computed: {
@@ -41,8 +54,13 @@ export default {
       return this.$store.state.tagView.cachedViews
     }
   },
+  methods: {
+    handleMenuChoose (item) {
+      this.$refs.tagView.addView(item)
+    }
+  },
   mounted () {
-    this.menus = menus
+
   }
 }
 </script>
