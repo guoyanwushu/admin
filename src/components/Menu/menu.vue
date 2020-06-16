@@ -1,6 +1,6 @@
 <template>
   <el-menu default-active="1" @select="handleSelect">
-    <menu-item v-for="item in menusData" :menuItem="item" :index-key="indexKey" :text-key="textKey"></menu-item>
+    <menu-item v-for="item in menusData" :menuItem="item" :index-key="indexKey" :text-key="textKey" :key="item[indexKey]"></menu-item>
   </el-menu>
 </template>
 <script>

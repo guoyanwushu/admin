@@ -2,7 +2,7 @@
   <div>
     <el-submenu v-if="menuItem.children && menuItem.children.length>0" :index="menuItem[indexKey]">
       <span slot="title">{{menuItem[textKey]}}</span>
-      <menu-item v-for="item in menuItem.children" :menuItem="item" :index-key="indexKey" :text-key="textKey"></menu-item>
+      <menu-item v-for="item in menuItem.children" :menuItem="item" :index-key="indexKey" :text-key="textKey" :key="item[indexKey]"></menu-item>
     </el-submenu>
     <el-menu-item v-else :index="menuItem[indexKey]" @click="chooseMenuItem">
       <span slot="title">{{menuItem[textKey]}}</span>
