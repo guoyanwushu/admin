@@ -10,7 +10,7 @@
       </div>
       <div class="panel-right">
         <tag-nav
-          :tags="tags"
+          :init-tags="tags"
           ref="tagView"
           tag-value-field="id"
           tag-text-field="text"

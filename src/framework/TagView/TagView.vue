@@ -1,5 +1,5 @@
 <template>
-  <div ref="tagviewContainer" class="tagview-container" :class="isScroll?'scrolling':''" @resize="checkScroll">
+  <div ref="tagviewContainer" class="tagview-container" :class="isScroll?'scrolling':''" @resize="checkScroll" @blur="handleBlur">
     <span @click="transLeft" v-if="isScroll" class="trans-icon trans-left"><i class="iconfont icon-xiazai6"></i></span>
     <div class="tags-container" ref="tags">
       <li
@@ -23,13 +23,13 @@ export default {
       isScroll: false,
       transDis: 0,           // 整个tags容器水平位移的距离
       activeTagId: this.defaultActiveTagId,
-      optionTag: null
+      optionTag: null,
+      tags: this.initTags
     }
   },
   props: {
-    tags: {
+    initTags: {
       type: Array,
-      default: []
     },
     transStepDis: {
       type: Number,
@@ -61,15 +61,23 @@ export default {
       this.contextMenuInstance = new ContextMenuConstructor({
         el: document.createElement('div')
       })
+      this.contextMenuInstance.refresh = false
     }
     this.contextMenuInstance.tagRef = this;
     this.$on('closeTag', function (type) {
       this.deleteView(this.optionTag[this.tagValueField], type);
-      this.contextMenuInstance.$el.style.display = 'none'
+      this.contextMenuInstance.show = false
+    })
+    this.$on('refresh', function () {
+      this.$emit('refreshTag',  this.optionTag)
     })
    },
   methods: {
+    handleBlur () {
+      this.contextMenuInstance ? this.contextMenuInstance.show = false : ''
+    },
     showContextMenu (tag, event) {
+      // 要动态计算一下contextMenu的 小箭头位置，确保能指到对应的tag上面去
       this.optionTag = tag
       event.preventDefault();
       const tagDom = document.getElementById(`_tag_${tag[this.tagValueField]}`)
@@ -77,11 +85,13 @@ export default {
         const rect = tagDom.getBoundingClientRect();
         if (document.body.offsetWidth - rect.left > 220) {
           this.contextMenuInstance.$el.style.left = rect.left + 'px'
+          this.contextMenuInstance.arrowLeft = 15
         } else {
           this.contextMenuInstance.$el.style.left = document.body.offsetWidth - 225 + 'px'
+          this.contextMenuInstance.arrowLeft = 220 - (document.body.offsetWidth - rect.left) + 10
         }
         this.contextMenuInstance.$el.style.top = rect.top + 40 + 'px'
-        this.contextMenuInstance.$el.style.display = 'block'
+        this.contextMenuInstance.show = true
         document.body.appendChild(this.contextMenuInstance.$el);
       }
     },
@@ -105,6 +115,7 @@ export default {
     handleClick (tag) {
       this.activeTagId = tag[this.tagValueField];
       this.checkVisualStatus(tag[this.tagValueField])
+      // 把这个事件抛出去喽， 看外面需求需要咋个样子
       this.$emit('tagActive', tag)
     },
     getDistanceInfo () {
@@ -141,7 +152,7 @@ export default {
         this.checkVisualStatus(this.activeTagId)
       })
     },
-    // 根据value字段删除对应的tagView,
+    // 根据value字段删除对应的tagView, 注意delete的时候要注意同步容器的translate位置, 否则删了之后就gg了
     deleteView (tagValue, type) {
       const deleteIndex = this.tags.findIndex(item => item[this.tagValueField] === tagValue)
       const deleteView = deleteIndex > -1 ?this.tags[deleteIndex]:null
@@ -179,7 +190,12 @@ export default {
           }
         }
       }
-      this.checkVisualStatus(this.activeTagId)
+      if (this.activeTagId !== -1) {
+        this.$nextTick(function () {
+          this.checkScroll()
+          this.checkVisualStatus(this.activeTagId)
+        })
+      }
     }
   },
   watch: {
