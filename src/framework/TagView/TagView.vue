@@ -49,21 +49,23 @@ export default {
     },
     defaultActiveTagId: {
       type: String
-    }
+    },
+    pullMenus: Array
   },
   mounted () {
-    // TODO 监听resize事件, 判断是否要显示向左及向右的滚动条
+    const self = this
     window.addEventListener('resize', () => {
       this.checkScroll()
     })
     const ContextMenuConstructor = Vue.extend(ContextMenu)
     if (!this.contextMenuInstance) {
       this.contextMenuInstance = new ContextMenuConstructor({
-        el: document.createElement('div')
+        el: document.createElement('div'),
       })
       this.contextMenuInstance.refresh = false
     }
     this.contextMenuInstance.tagRef = this;
+    this.contextMenuInstance.pullMenus = this.pullMenus
     this.$on('closeTag', function (type) {
       this.deleteView(this.optionTag[this.tagValueField], type);
       this.contextMenuInstance.show = false
@@ -127,16 +129,22 @@ export default {
     checkScroll () {
       const {tagsWidth, containerWidth} = this.getDistanceInfo();
       this.isScroll =  tagsWidth > containerWidth
+      if (!this.isScroll && this.transDis) {
+        this.transDis = 0   // 屏幕很小的时候，出现了滚动，当屏幕变大时，判定不需要滚动了，但是还是要将之前的tranform滚动还原
+      }
     },
     checkVisualStatus (tagId) {
       const tagNow = document.getElementById(`_tag_${tagId}`);
-      const {containerWidth} = this.getDistanceInfo();
-      if (tagNow.offsetLeft + this.transDis < 0) {
-        this.transDis = -tagNow.offsetLeft
+      if (tagNow) {
+        const {containerWidth} = this.getDistanceInfo();
+        if (tagNow.offsetLeft + this.transDis < 0) {
+          this.transDis = -tagNow.offsetLeft
+        }
+        if (tagNow.offsetLeft + tagNow.offsetWidth + this.transDis > containerWidth) {
+          this.transDis = -(tagNow.offsetLeft - containerWidth + tagNow.offsetWidth)
+        }
       }
-      if (tagNow.offsetLeft + tagNow.offsetWidth + this.transDis > containerWidth) {
-        this.transDis = -(tagNow.offsetLeft - containerWidth + tagNow.offsetWidth)
-      }
+
     },
     // 增删改放到内部的原因是，如果tags数据完全依赖外部传进来，去感知tags具体新增了哪个，删除了哪个，重新选了哪个，都要和上一状态进行对比。而且当前选中项不仅外部可以变更，tagViews里面的方法也是
     // 可以变更的,

@@ -1,6 +1,7 @@
 <template>
   <div class="layout-container">
     <header class="layout-head">
+      <slot name="header"></slot>
       <v-header></v-header>
     </header>
     <div class="layout-content">
@@ -11,14 +12,14 @@
       <div class="panel-right">
         <tag-nav
           :init-tags="tags"
+          :pull-menus="pullMenus"
+          @tagActive="handleTagChoose"
           ref="tagView"
           tag-value-field="id"
           tag-text-field="text"
           ></tag-nav>
-        <div class="router-view-wrapper">
-          <keep-alive :include="cachedViews">
-            <router-view />
-          </keep-alive>
+        <div class="content-wrapper">
+          <ContentComp :pages="pages" ref="content"></ContentComp>
         </div>
       </div>
     </div>
@@ -30,16 +31,26 @@ import MainNav from '../Menu/menu.vue'
 import TagNav from '../../framework/TagView/TagView'
 import menus from '../../mock/permission'
 import inst from '../../apis/index'
+import ContentComp from '../Content/ContentComp'
 export default {
   name: 'layout',
   components: {
     TagNav,
     MainNav,
-    VHeader
+    VHeader,
+    ContentComp
   },
   data () {
     return {
       menus: menus,
+      pages: [],
+      pullMenus: [{
+        type: 'refresh',
+        name: '刷新'
+      }, {
+        type: 'other',
+        name: '关闭其他'
+      }],
       tags: [{
         id: 1,
         text: '通知公告'
@@ -56,7 +67,14 @@ export default {
   },
   methods: {
     handleMenuChoose (item) {
-      this.$refs.tagView.addView(item)
+      this.$refs.tagView.addView(item);
+      this.$refs.content.addPage({
+        id: item.id,
+        url: item.attributes.url
+      })
+    },
+    handleTagChoose (tag) {
+      this.$refs.content.activePageId = tag.id;
     }
   },
   mounted () {
@@ -90,7 +108,7 @@ export default {
       float: left;
     }
   }
-  .router-view-wrapper {
+  .content-wrapper {
     width: 100%;
     height: calc(100% - 40px);
   }

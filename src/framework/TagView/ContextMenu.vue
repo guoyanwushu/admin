@@ -1,11 +1,16 @@
 <template>
   <div class="context-menu" v-show="show" @mouseleave="show=false">
-    <span @click="pushEvent('refresh')" v-if="refresh">刷新</span>
-    <span @click="pushEvent('now')">关闭当前</span>
-    <span @click="pushEvent('other')">关闭其他</span>
-    <span @click="pushEvent('all')">关闭所有</span>
-    <span @click="pushEvent('left')">关闭左边</span>
-    <span @click="pushEvent('right')">关闭右边</span>
+    <template v-if="pullMenus && pullMenus.length">
+      <span v-for="item in pullMenus" @click="pushEvent(item.type)">{{item.name}}</span>
+    </template>
+    <template v-else>
+      <span @click="pushEvent('refresh')" v-if="refresh">刷新</span>
+      <span @click="pushEvent('now')">关闭当前</span>
+      <span @click="pushEvent('other')">关闭其他</span>
+      <span @click="pushEvent('all')">关闭所有</span>
+      <span @click="pushEvent('left')">关闭左边</span>
+      <span @click="pushEvent('right')">关闭右边</span>
+    </template>
     <i class="contexnt-menu_arrow" :style="{left: arrowLeft + 'px'}"></i>
   </div>
 </template>
@@ -19,6 +24,7 @@ export default {
   },
   props: {
     tagRef: Object,
+    pullMenus: Array,
     refresh: {
       type: Boolean,
       default: false
